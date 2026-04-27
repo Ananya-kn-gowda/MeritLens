@@ -1,0 +1,162 @@
+/* [project]/src/app/globals.css [app-client] (css) */
+:root {
+  --bg: #0b0f1a;
+  --surface: #111827;
+  --surface2: #1a2235;
+  --border: #ffffff12;
+  --accent: #4ade80;
+  --accent2: #22d3ee;
+  --accent3: #f59e0b;
+  --text: #e8eaf0;
+  --muted: #64748b;
+  --card-bg: #ffffff09;
+  --card-border: #ffffff17;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 24px 60px #00000073;
+}
+
+*, :before, :after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: DM Sans, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+body:before {
+  content: "";
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  background-size: 180px;
+  position: fixed;
+  inset: 0;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section {
+  padding: 100px 0;
+}
+
+.tag {
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: #4ade801a;
+  border: 1px solid #4ade8038;
+  border-radius: 99px;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 18px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-flex;
+}
+
+.section-title {
+  margin-bottom: 16px;
+  font-family: Syne, sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.section-sub {
+  color: var(--muted);
+  max-width: 540px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transition: opacity .65s, transform .65s;
+  transform: translateY(24px);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none !important;
+  }
+
+  .solution-layout, .dash-body, .sdg-inner {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dash-form {
+    border-right: none !important;
+    border-bottom: 1px solid var(--border) !important;
+  }
+
+  .sdg-badge-big {
+    width: 100px !important;
+    height: 100px !important;
+  }
+
+  .sdg-badge-big .num {
+    font-size: 2.5rem !important;
+  }
+
+  .sdg-goals {
+    grid-template-columns: 1fr !important;
+  }
+
+  .stat-item {
+    border-right: none !important;
+    border-bottom: 1px solid var(--border) !important;
+  }
+
+  .stat-item:last-child {
+    border-bottom: none !important;
+  }
+
+  .score-compare {
+    flex-direction: column !important;
+  }
+}
+
+/*# sourceMappingURL=src_app_globals_0p2ml0n.css.map*/
