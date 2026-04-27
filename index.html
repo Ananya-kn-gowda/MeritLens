@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MeritLens — Seeing the Talent, Not Just the Score.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ─── CSS Variables ──────────────────────────────────────────── */
+    :root {
+      --bg: #0b0f1a;
+      --surface: #111827;
+      --surface2: #1a2235;
+      --border: rgba(255, 255, 255, 0.07);
+      --accent: #4ade80;
+      /* lime green */
+      --accent2: #22d3ee;
+      /* cyan */
+      --accent3: #f59e0b;
+      /* amber */
+      --text: #e8eaf0;
+      --muted: #64748b;
+      --card-bg: rgba(255, 255, 255, 0.035);
+      --card-border: rgba(255, 255, 255, 0.09);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    /* ─── Reset ──────────────────────────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* ─── Utility ─────────────────────────────────────────────────── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section {
+      padding: 100px 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(74, 222, 128, .1);
+      border: 1px solid rgba(74, 222, 128, .22);
+      padding: 5px 12px;
+      border-radius: 99px;
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 540px;
+      line-height: 1.7;
+    }
+
+    /* ─── Noise Overlay ───────────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+      background-size: 180px;
+      pointer-events: none;
+    }
+
+    /* ─── Navbar ──────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(11, 15, 26, .82);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 62px;
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-logo .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .nav-links a {
+      font-size: .9rem;
+      color: var(--muted);
+      transition: color .2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-cta {
+      background: var(--accent);
+      color: #0b0f1a;
+      font-weight: 600;
+      font-size: .85rem;
+      padding: 9px 20px;
+      border-radius: 8px;
+      transition: opacity .2s;
+    }
+
+    .nav-cta:hover {
+      opacity: .85;
+    }
+
+    /* ─── Hero ────────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding-top: 62px;
+    }
+
+    /* Mesh gradient orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: .18;
+      pointer-events: none;
+    }
+
+    .orb1 {
+      width: 560px;
+      height: 560px;
+      background: #4ade80;
+      top: -120px;
+      left: -160px;
+    }
+
+    .orb2 {
+      width: 460px;
+      height: 460px;
+      background: #22d3ee;
+      bottom: -80px;
+      right: -120px;
+    }
+
+    .orb3 {
+      width: 300px;
+      height: 300px;
+      background: #f59e0b;
+      top: 40%;
+      left: 50%;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(74, 222, 128, .08);
+      border: 1px solid rgba(74, 222, 128, .2);
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: .8rem;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 28px;
+      animation: fadeUp .6s ease both;
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      animation: fadeUp .7s .1s ease both;
+    }
+
+    .hero-title span {
+      color: var(--accent);
+    }
+
+    .hero-tagline {
+      font-size: 1.3rem;
+      color: var(--muted);
+      font-style: italic;
+      margin: 16px 0 24px;
+      animation: fadeUp .7s .2s ease both;
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      color: rgba(232, 234, 240, .7);
+      max-width: 560px;
+      line-height: 1.75;
+      animation: fadeUp .7s .3s ease both;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 36px;
+      animation: fadeUp .7s .4s ease both;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0b0f1a;
+      font-weight: 700;
+      font-size: .95rem;
+      padding: 14px 30px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: transform .2s, opacity .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      opacity: .9;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      font-weight: 500;
+      font-size: .95rem;
+      padding: 14px 28px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(255, 255, 255, .2);
+      background: rgba(255, 255, 255, .04);
+    }
+
+    /* ─── Stat Bar ────────────────────────────────────────────────── */
+    .stat-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 60px;
+      animation: fadeUp .7s .5s ease both;
+    }
+
+    .stat-item {
+      flex: 1;
+      min-width: 180px;
+      padding: 28px 32px;
+      border-right: 1px solid var(--border);
+      background: var(--card-bg);
+    }
+
+    .stat-item:last-child {
+      border-right: none;
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: .85rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ─── Problem ─────────────────────────────────────────────────── */
+    #problem {
+      background: var(--surface);
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 48px;
+    }
+
+    .problem-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 32px;
+      transition: transform .25s, border-color .25s;
+    }
+
+    .problem-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, .15);
+    }
+
+    .problem-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 18px;
+      background: rgba(245, 158, 11, .12);
+      color: var(--accent3);
+    }
+
+    .problem-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .problem-card p {
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ─── Solution ────────────────────────────────────────────────── */
+    .solution-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      margin-top: 48px;
+    }
+
+    .formula-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px;
+      font-family: 'Syne', sans-serif;
+    }
+
+    .formula-box .formula {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      border: 1px dashed rgba(74, 222, 128, .3);
+      padding: 18px 24px;
+      border-radius: 10px;
+      text-align: center;
+      margin: 20px 0;
+      background: rgba(74, 222, 128, .05);
+    }
+
+    .factor-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .factor-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: .9rem;
+      color: var(--muted);
+    }
+
+    .factor-list li i {
+      color: var(--accent);
+      width: 16px;
+    }
+
+    .solution-points {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .solution-point {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .sp-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(34, 211, 238, .12);
+      color: var(--accent2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: .95rem;
+      flex-shrink: 0;
+    }
+
+    .sp-text h4 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .sp-text p {
+      font-size: .88rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ─── Dashboard ───────────────────────────────────────────────── */
+    #dashboard {
+      background: var(--surface);
+    }
+
+    .dash-wrapper {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 48px;
+      box-shadow: var(--shadow);
+    }
+
+    .dash-header {
+      background: rgba(255, 255, 255, .03);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dot-row {
+      display: flex;
+      gap: 7px;
+    }
+
+    .dot-btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot-btn.r {
+      background: #ff5f57;
+    }
+
+    .dot-btn.y {
+      background: #febc2e;
+    }
+
+    .dot-btn.g {
+      background: #28c840;
+    }
+
+    .dash-tab {
+      margin-left: 16px;
+      font-size: .82rem;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .06);
+      padding: 5px 14px;
+      border-radius: 6px;
+    }
+
+    .dash-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .dash-form {
+      padding: 36px;
+      border-right: 1px solid var(--border);
+    }
+
+    .dash-results {
+      padding: 36px;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 8px;
+      letter-spacing: .04em;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 8px;
+      font-size: .9rem;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--accent);
+    }
+
+    .form-group select option {
+      background: #1a2235;
+    }
+
+    /* Slider */
+    .slider-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: .75rem;
+      color: var(--muted);
+    }
+
+    input[type=range] {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, .1);
+      outline: none;
+      border: none;
+      padding: 0;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 0 0 3px rgba(74, 222, 128, .2);
+    }
+
+    #calc-btn {
+      width: 100%;
+      padding: 13px;
+      font-size: .95rem;
+      background: var(--accent);
+      color: #0b0f1a;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Syne', sans-serif;
+      transition: opacity .2s, transform .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    #calc-btn:hover {
+      opacity: .88;
+      transform: translateY(-1px);
+    }
+
+    /* Results */
+    .result-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      color: var(--muted);
+      gap: 12px;
+      font-size: .9rem;
+    }
+
+    .result-placeholder i {
+      font-size: 2.5rem;
+      opacity: .3;
+    }
+
+    .result-card {
+      display: none;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .result-card.show {
+      display: flex;
+      animation: fadeUp .5s ease;
+    }
+
+    .candidate-tag {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: .9rem;
+      color: #0b0f1a;
+    }
+
+    .cname {
+      font-weight: 600;
+      font-size: .9rem;
+    }
+
+    .cschool {
+      font-size: .75rem;
+      color: var(--muted);
+    }
+
+    .score-row {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .score-line {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .score-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    .score-meta strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .progress-track {
+      height: 8px;
+      background: rgba(255, 255, 255, .08);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width .8s cubic-bezier(.23, 1, .32, 1);
+    }
+
+    .fill-raw {
+      background: var(--muted);
+    }
+
+    .fill-adj {
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+    }
+
+    .multiplier-box {
+      background: rgba(74, 222, 128, .07);
+      border: 1px solid rgba(74, 222, 128, .2);
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .mult-label {
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    .mult-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .insight-box {
+      background: rgba(245, 158, 11, .06);
+      border: 1px solid rgba(245, 158, 11, .18);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: .82rem;
+      color: rgba(245, 158, 11, .9);
+      line-height: 1.55;
+    }
+
+    /* ─── Hidden Stars ────────────────────────────────────────────── */
+    .stars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 48px;
+    }
+
+    .star-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: transform .25s, border-color .25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .star-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+
+    .star-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, .14);
+    }
+
+    .star-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .star-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #0b0f1a;
+    }
+
+    .av1 {
+      background: linear-gradient(135deg, #4ade80, #22d3ee);
+    }
+
+    .av2 {
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+    }
+
+    .av3 {
+      background: linear-gradient(135deg, #a78bfa, #ec4899);
+    }
+
+    .star-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .star-context {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .score-compare {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .score-box {
+      flex: 1;
+      background: rgba(255, 255, 255, .04);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .score-box .val {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .score-box .lbl {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .raw-val {
+      color: var(--muted);
+    }
+
+    .adj-val {
+      color: var(--accent);
+    }
+
+    .mult-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(34, 211, 238, .1);
+      color: var(--accent2);
+      border: 1px solid rgba(34, 211, 238, .2);
+      padding: 5px 12px;
+      border-radius: 99px;
+      font-size: .78rem;
+      font-weight: 600;
+    }
+
+    /* ─── SDG Section ─────────────────────────────────────────────── */
+    #sdg {
+      background: var(--surface);
+    }
+
+    .sdg-inner {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .sdg-badge-big {
+      width: 160px;
+      height: 160px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #e11d48, #f59e0b);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .sdg-badge-big .num {
+      font-family: 'Syne', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: white;
+      line-height: 1;
+    }
+
+    .sdg-badge-big .word {
+      font-size: .65rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .8);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      text-align: center;
+    }
+
+    .sdg-goals {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .sdg-goal {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 16px;
+      border-radius: 10px;
+    }
+
+    .sdg-goal i {
+      color: var(--accent);
+      margin-top: 2px;
+    }
+
+    .sdg-goal p {
+      font-size: .85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ─── Footer ──────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0 32px;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .footer-brand .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .footer-brand p {
+      font-size: .85rem;
+      color: var(--muted);
+      max-width: 260px;
+      line-height: 1.6;
+    }
+
+    .footer-links h5 {
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 14px;
+    }
+
+    .footer-links ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links ul li a {
+      font-size: .85rem;
+      color: var(--muted);
+      transition: color .2s;
+    }
+
+    .footer-links ul li a:hover {
+      color: var(--text);
+    }
+
+    .footer-bottom {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .footer-bottom p {
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    /* ─── Animations ──────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ─── Responsive ──────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .solution-layout,
+      .dash-body,
+      .sdg-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .dash-form {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .sdg-badge-big {
+        width: 100px;
+        height: 100px;
+      }
+
+      .sdg-badge-big .num {
+        font-size: 2.5rem;
+      }
+
+      .sdg-goals {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-item {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .stat-item:last-child {
+        border-bottom: none;
+      }
+
+      .score-compare {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══ NAVBAR ═══════════════════════════════════════════════════════ -->
+  <nav>
+    <div class="container nav-inner">
+      <div class="nav-logo">
+        <span class="dot"></span> MeritLens
+      </div>
+      <div class="nav-links">
+        <a href="#problem">Problem</a>
+        <a href="#solution">Solution</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#stars">Hidden Stars</a>
+      </div>
+      <a href="#dashboard" class="nav-cta">Try Dashboard</a>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ══════════════════════════════════════════════════════════ -->
+  <section id="hero" class="section">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <i class="fas fa-seedling"></i> SDG Goal 10 — Reduced Inequalities
+        </div>
+        <h1 class="hero-title">
+          Merit<span>Lens</span>
+        </h1>
+        <p class="hero-tagline">"Seeing the Talent, Not Just the Score."</p>
+        <p class="hero-desc">
+          An AI-powered evaluation platform that calculates a <strong>Grit Multiplier</strong>
+          — adjusting raw scores by a candidate's socioeconomic environment, school funding,
+          and family income. Because potential doesn't always look the same on paper.
+        </p>
+        <div class="hero-ctas">
+          <a href="#dashboard" class="btn-primary">
+            <i class="fas fa-chart-line"></i> Analyze Candidate
+          </a>
+          <a href="#solution" class="btn-secondary">
+            <i class="fas fa-book-open"></i> How It Works
+          </a>
+        </div>
+      </div>
+
+      <div class="stat-bar reveal">
+        <div class="stat-item">
+          <div class="stat-num">68%</div>
+          <div class="stat-label">of top talent goes unrecognized due to biased scoring</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">3.2×</div>
+          <div class="stat-label">average Grit Multiplier for underfunded-school candidates</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">190+</div>
+          <div class="stat-label">countries where income gaps skew academic evaluation</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PROBLEM ═══════════════════════════════════════════════════════ -->
+  <section id="problem" class="section">
+    <div class="container">
+      <div class="tag reveal"><i class="fas fa-exclamation-triangle"></i> The Problem</div>
+      <h2 class="section-title reveal">Traditional systems ignore context.</h2>
+      <p class="section-sub reveal">
+        A 3.2 GPA from a student in a low-income household with no tutors, attending
+        an underfunded rural school — is not the same as a 3.2 from a student with
+        every advantage. Yet most systems treat them identically.
+      </p>
+      <div class="problem-grid">
+        <div class="problem-card reveal">
+          <div class="problem-icon"><i class="fas fa-balance-scale-right"></i></div>
+          <h3>Raw Scores Lie</h3>
+          <p>Raw academic scores reflect access to resources as much as raw ability. Students with expensive tutors and
+            prep courses have a structural advantage.</p>
+        </div>
+        <div class="problem-card reveal">
+          <div class="problem-icon"><i class="fas fa-school"></i></div>
+          <h3>Underfunded Schools</h3>
+          <p>Government and rural schools often lack labs, libraries, and experienced teachers — making achievement
+            significantly harder to attain.</p>
+        </div>
+        <div class="problem-card reveal">
+          <div class="problem-icon"><i class="fas fa-hand-holding-usd"></i></div>
+          <h3>Income Barriers</h3>
+          <p>Students from low-income families juggle part-time work, caregiving duties, and financial stress — factors
+            invisible to any standard scoring rubric.</p>
+        </div>
+        <div class="problem-card reveal">
+          <div class="problem-icon"><i class="fas fa-user-times"></i></div>
+          <h3>Hidden Talent Lost</h3>
+          <p>Countless brilliant minds are filtered out early — not because they lack potential, but because the system
+            never had a lens wide enough to see them.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SOLUTION ══════════════════════════════════════════════════════ -->
+  <section id="solution" class="section">
+    <div class="container">
+      <div class="tag reveal"><i class="fas fa-lightbulb"></i> Our Solution</div>
+      <h2 class="section-title reveal">Introducing the Grit Multiplier.</h2>
+      <div class="solution-layout">
+        <div class="formula-box reveal">
+          <p style="font-size:.85rem; color:var(--muted);">How we calculate adjusted merit:</p>
+          <div class="formula">
+            Adjusted Score = Raw Score × Grit Multiplier
+          </div>
+          <p style="font-size:.82rem; color:var(--muted); margin-bottom:16px;">Grit Multiplier factors:</p>
+          <ul class="factor-list">
+            <li><i class="fas fa-check-circle"></i> Family income bracket (lower = higher multiplier)</li>
+            <li><i class="fas fa-check-circle"></i> School type & funding level</li>
+            <li><i class="fas fa-check-circle"></i> Regional opportunity index</li>
+            <li><i class="fas fa-check-circle"></i> Access to academic resources</li>
+            <li><i class="fas fa-check-circle"></i> Socioeconomic stress indicators</li>
+          </ul>
+        </div>
+        <div class="solution-points reveal">
+          <div class="solution-point">
+            <div class="sp-num">01</div>
+            <div class="sp-text">
+              <h4>Contextual Scoring</h4>
+              <p>We don't lower standards — we raise context. Every score is evaluated against the environment it was
+                achieved in, giving each student a fair fighting chance.</p>
+            </div>
+          </div>
+          <div class="solution-point">
+            <div class="sp-num">02</div>
+            <div class="sp-text">
+              <h4>Transparent Algorithm</h4>
+              <p>The Grit Multiplier is not a black box. Every factor is documented, auditable, and calibrated against
+                real socioeconomic data.</p>
+            </div>
+          </div>
+          <div class="solution-point">
+            <div class="sp-num">03</div>
+            <div class="sp-text">
+              <h4>Equitable Outcomes</h4>
+              <p>By adjusting for context, institutions discover candidates they would have otherwise overlooked —
+                leading to more diverse, resilient cohorts.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ DASHBOARD ═════════════════════════════════════════════════════ -->
+  <section id="dashboard" class="section">
+    <div class="container">
+      <div class="tag reveal"><i class="fas fa-tachometer-alt"></i> Interactive Dashboard</div>
+      <h2 class="section-title reveal">Calculate Merit Score.</h2>
+      <p class="section-sub reveal">Enter a candidate's details to see how their raw score adjusts when context is
+        applied.</p>
+
+      <div class="dash-wrapper reveal">
+        <!-- Window chrome -->
+        <div class="dash-header">
+          <div class="dot-row">
+            <div class="dot-btn r"></div>
+            <div class="dot-btn y"></div>
+            <div class="dot-btn g"></div>
+          </div>
+          <div class="dash-tab">MeritLens — Candidate Analyzer</div>
+        </div>
+
+        <div class="dash-body">
+          <!-- Input Form -->
+          <div class="dash-form">
+            <div class="form-group">
+              <label>CANDIDATE NAME</label>
+              <input type="text" id="inp-name" placeholder="e.g. Priya Sharma" />
+            </div>
+            <div class="form-group">
+              <label>GPA / SCORE (out of 10)</label>
+              <input type="number" id="inp-score" placeholder="e.g. 7.4" min="0" max="10" step="0.1" />
+            </div>
+            <div class="form-group">
+              <label>SCHOOL TYPE</label>
+              <select id="inp-school">
+                <option value="">Select school type…</option>
+                <option value="elite">Elite Private School</option>
+                <option value="private">Standard Private School</option>
+                <option value="government">Government / Public School</option>
+                <option value="rural">Rural / Underfunded School</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>FAMILY ANNUAL INCOME</label>
+              <div class="slider-wrap">
+                <input type="range" id="inp-income" min="0" max="4" step="1" value="2" />
+                <div class="slider-labels">
+                  <span>&lt; ₹1L</span>
+                  <span>₹1–3L</span>
+                  <span>₹3–6L</span>
+                  <span>₹6–12L</span>
+                  <span>₹12L+</span>
+                </div>
+              </div>
+            </div>
+            <button id="calc-btn">
+              <i class="fas fa-calculator"></i> Calculate Merit Score
+            </button>
+          </div>
+
+          <!-- Results -->
+          <div class="dash-results">
+            <!-- Placeholder shown before calculation -->
+            <div class="result-placeholder" id="result-placeholder">
+              <i class="fas fa-chart-pie"></i>
+              <p>Fill in the candidate details and hit <strong>Calculate</strong> to see the adjusted score and Grit
+                Multiplier.</p>
+            </div>
+
+            <!-- Result card shown after calculation -->
+            <div class="result-card" id="result-card">
+              <div class="candidate-tag">
+                <div class="avatar" id="res-avatar">?</div>
+                <div>
+                  <div class="cname" id="res-name">—</div>
+                  <div class="cschool" id="res-school">—</div>
+                </div>
+              </div>
+
+              <div class="score-row">
+                <div class="score-line">
+                  <div class="score-meta">
+                    <span>Raw Score</span>
+                    <strong id="res-raw">—</strong>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill fill-raw" id="bar-raw" style="width:0%"></div>
+                  </div>
+                </div>
+                <div class="score-line">
+                  <div class="score-meta">
+                    <span>Adjusted Score</span>
+                    <strong id="res-adj">—</strong>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill fill-adj" id="bar-adj" style="width:0%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="multiplier-box">
+                <div>
+                  <div class="mult-label">Grit Multiplier</div>
+                  <div style="font-size:.75rem; color:var(--muted); margin-top:2px;" id="res-mult-desc">—</div>
+                </div>
+                <div class="mult-value" id="res-mult">—×</div>
+              </div>
+
+              <div class="insight-box" id="res-insight">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ HIDDEN STARS ══════════════════════════════════════════════════ -->
+  <section id="stars" class="section">
+    <div class="container">
+      <div class="tag reveal"><i class="fas fa-star"></i> Hidden Stars</div>
+      <h2 class="section-title reveal">Candidates the system almost missed.</h2>
+      <p class="section-sub reveal">
+        These are real-world archetypes. When context is applied, overlooked
+        candidates rise to their true potential ranking.
+      </p>
+      <div class="stars-grid">
+        <!-- Card 1 -->
+        <div class="star-card reveal">
+          <div class="star-header">
+            <div class="star-avatar av1">AS</div>
+            <div>
+              <div class="star-name">Anjali Singh</div>
+              <div class="star-context">Rural Govt. School · Family income &lt; ₹1L/yr</div>
+            </div>
+          </div>
+          <div class="score-compare">
+            <div class="score-box">
+              <div class="val raw-val">6.8</div>
+              <div class="lbl">Raw Score</div>
+            </div>
+            <div class="score-box">
+              <div class="val adj-val">9.2</div>
+              <div class="lbl">Adjusted Score</div>
+            </div>
+          </div>
+          <div class="mult-badge">
+            <i class="fas fa-bolt"></i> Grit Multiplier: 1.35×
+          </div>
+          <p style="font-size:.8rem; color:var(--muted); margin-top:14px; line-height:1.6;">
+            Walked 4km daily to reach school. No electricity at home after 9pm. Still ranked top 3 in district science
+            fair.
+          </p>
+        </div>
+        <!-- Card 2 -->
+        <div class="star-card reveal">
+          <div class="star-header">
+            <div class="star-avatar av2">RK</div>
+            <div>
+              <div class="star-name">Rajan Kumar</div>
+              <div class="star-context">Semi-urban Govt. School · Family income ₹1–3L/yr</div>
+            </div>
+          </div>
+          <div class="score-compare">
+            <div class="score-box">
+              <div class="val raw-val">7.1</div>
+              <div class="lbl">Raw Score</div>
+            </div>
+            <div class="score-box">
+              <div class="val adj-val">9.0</div>
+              <div class="lbl">Adjusted Score</div>
+            </div>
+          </div>
+          <div class="mult-badge">
+            <i class="fas fa-bolt"></i> Grit Multiplier: 1.27×
+          </div>
+          <p style="font-size:.8rem; color:var(--muted); margin-top:14px; line-height:1.6;">
+            Worked part-time to support younger siblings. Self-taught Python using a shared smartphone. Built a local
+            weather app at 16.
+          </p>
+        </div>
+        <!-- Card 3 -->
+        <div class="star-card reveal">
+          <div class="star-header">
+            <div class="star-avatar av3">FM</div>
+            <div>
+              <div class="star-name">Fatima Mirza</div>
+              <div class="star-context">Urban Govt. School · Family income ₹3–6L/yr</div>
+            </div>
+          </div>
+          <div class="score-compare">
+            <div class="score-box">
+              <div class="val raw-val">7.8</div>
+              <div class="lbl">Raw Score</div>
+            </div>
+            <div class="score-box">
+              <div class="val adj-val">9.4</div>
+              <div class="lbl">Adjusted Score</div>
+            </div>
+          </div>
+          <div class="mult-badge">
+            <i class="fas fa-bolt"></i> Grit Multiplier: 1.21×
+          </div>
+          <p style="font-size:.8rem; color:var(--muted); margin-top:14px; line-height:1.6;">
+            First-generation college aspirant. No coaching classes. Used YouTube and public library to self-prepare for
+            competitive exams.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SDG SECTION ═══════════════════════════════════════════════════ -->
+  <section id="sdg" class="section">
+    <div class="container">
+      <div class="tag reveal"><i class="fas fa-globe"></i> United Nations SDG</div>
+      <h2 class="section-title reveal">Aligned with Global Goals.</h2>
+      <div class="sdg-inner reveal" style="margin-top:48px;">
+        <div class="sdg-badge-big">
+          <div class="num">10</div>
+          <div class="word">Reduced<br />Inequalities</div>
+        </div>
+        <div>
+          <p style="color:var(--muted); font-size:.95rem; line-height:1.7; max-width:560px;">
+            MeritLens directly advances <strong style="color:var(--text);">SDG Goal 10</strong> by reducing inequality
+            in educational and professional opportunities. By surfacing overlooked talent, we
+            help build systems where your zip code, income bracket, or school type doesn't
+            determine your future.
+          </p>
+          <div class="sdg-goals">
+            <div class="sdg-goal">
+              <i class="fas fa-check-circle"></i>
+              <p>Reduce outcome disparities caused by unequal access to quality education</p>
+            </div>
+            <div class="sdg-goal">
+              <i class="fas fa-check-circle"></i>
+              <p>Empower individuals from marginalized groups to achieve fair representation</p>
+            </div>
+            <div class="sdg-goal">
+              <i class="fas fa-check-circle"></i>
+              <p>Promote inclusive evaluation practices in universities and institutions</p>
+            </div>
+            <div class="sdg-goal">
+              <i class="fas fa-check-circle"></i>
+              <p>Build transparent, data-driven tools that scale equitable access globally</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ════════════════════════════════════════════════════════ -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="logo">
+            <span style="color:var(--accent)">Merit</span>Lens
+          </div>
+          <p>Seeing the talent behind the score. An AI-powered platform for equitable candidate evaluation.</p>
+          <p style="margin-top:10px; font-size:.78rem; color:var(--muted);">Also known as <strong>EquiPulse</strong></p>
+        </div>
+        <div class="footer-links">
+          <h5>Product</h5>
+          <ul>
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#solution">How It Works</a></li>
+            <li><a href="#stars">Hidden Stars</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h5>Mission</h5>
+          <ul>
+            <li><a href="#problem">The Problem</a></li>
+            <li><a href="#sdg">SDG Alignment</a></li>
+            <li><a href="#">Research</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h5>Connect</h5>
+          <ul>
+            <li><a href="#"><i class="fab fa-github"></i> GitHub</a></li>
+            <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+            <li><a href="#"><i class="fas fa-envelope"></i> Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 MeritLens / EquiPulse. Built for equity.</p>
+        <p>SDG Goal 10 — Reduced Inequalities</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══ JAVASCRIPT ════════════════════════════════════════════════════ -->
+  <script>
+    /* ── Scroll Reveal ─────────────────────────────────────────────── */
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          // Stagger siblings inside same parent
+          const siblings = [...entry.target.parentElement.querySelectorAll('.reveal')];
+          const idx = siblings.indexOf(entry.target);
+          entry.target.style.transitionDelay = (idx * 0.08) + 's';
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    /* ── Grit Multiplier Calculation ───────────────────────────────── */
+    /*
+     * INCOME LEVELS (slider 0–4):
+     *   0 = < ₹1L/yr       → multiplier base: 1.40
+     *   1 = ₹1–3L/yr       → multiplier base: 1.28
+     *   2 = ₹3–6L/yr       → multiplier base: 1.14
+     *   3 = ₹6–12L/yr      → multiplier base: 1.05
+     *   4 = ₹12L+/yr       → multiplier base: 1.00
+     *
+     * SCHOOL TYPE bonus:
+     *   rural     → +0.12
+     *   government → +0.07
+     *   private   → +0.00
+     *   elite     → -0.05
+     *
+     * Adjusted Score = min(raw × multiplier, 10) — capped at 10
+     */
+
+    const incomeMultipliers = [1.40, 1.28, 1.14, 1.05, 1.00];
+    const incomeLabels = ['< ₹1L/yr', '₹1–3L/yr', '₹3–6L/yr', '₹6–12L/yr', '₹12L+/yr'];
+    const schoolBonus = { rural: 0.12, government: 0.07, private: 0.00, elite: -0.05 };
+    const schoolLabels = {
+      rural: 'Rural / Underfunded School',
+      government: 'Government / Public School',
+      private: 'Standard Private School',
+      elite: 'Elite Private School'
+    };
+
+    document.getElementById('calc-btn').addEventListener('click', () => {
+      const name = document.getElementById('inp-name').value.trim();
+      const score = parseFloat(document.getElementById('inp-score').value);
+      const school = document.getElementById('inp-school').value;
+      const income = parseInt(document.getElementById('inp-income').value);
+
+      // ── Validation ──
+      if (!name) { alert('Please enter the candidate\'s name.'); return; }
+      if (isNaN(score) || score < 0 || score > 10) { alert('Please enter a valid score between 0 and 10.'); return; }
+      if (!school) { alert('Please select a school type.'); return; }
+
+      // ── Calculate ──
+      const baseMult = incomeMultipliers[income];
+      const bonus = schoolBonus[school] || 0;
+      const gritMult = Math.round((baseMult + bonus) * 100) / 100;
+      const rawScore = Math.round(score * 10) / 10;
+      const adjRaw = rawScore * gritMult;
+      const adjScore = Math.min(Math.round(adjRaw * 10) / 10, 10);
+
+      // ── Insight text ──
+      let insight = '';
+      if (gritMult >= 1.35) {
+        insight = `🌟 Exceptional circumstance detected. ${name} achieved a ${rawScore} under severe resource constraints — this adjusted score places them in a high-potential tier.`;
+      } else if (gritMult >= 1.15) {
+        insight = `💡 Significant context gap identified. ${name}'s raw score underrepresents their ability. The Grit Multiplier corrects for limited access and financial barriers.`;
+      } else if (gritMult >= 1.05) {
+        insight = `📈 Modest contextual adjustment applied. ${name} had some structural disadvantages. The adjusted score reflects a more equitable evaluation.`;
+      } else {
+        insight = `✅ Minimal adjustment needed. ${name} had access to premium resources. Raw and adjusted scores are close, reflecting a level playing field.`;
+      }
+
+      // ── Update DOM ──
+      document.getElementById('result-placeholder').style.display = 'none';
+
+      const card = document.getElementById('result-card');
+      card.classList.remove('show');
+      void card.offsetWidth; // force reflow for re-animation
+      card.classList.add('show');
+
+      // Avatar initials
+      const initials = name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+      document.getElementById('res-avatar').textContent = initials;
+      document.getElementById('res-name').textContent = name;
+      document.getElementById('res-school').textContent = schoolLabels[school] + ' · ' + incomeLabels[income];
+      document.getElementById('res-raw').textContent = rawScore.toFixed(1) + ' / 10';
+      document.getElementById('res-adj').textContent = adjScore.toFixed(1) + ' / 10';
+      document.getElementById('res-mult').textContent = gritMult.toFixed(2) + '×';
+      document.getElementById('res-insight').textContent = insight;
+
+      const multDesc = gritMult >= 1.30 ? 'High — strong socioeconomic disadvantage'
+        : gritMult >= 1.15 ? 'Moderate — notable resource gap'
+          : gritMult >= 1.05 ? 'Low — minor contextual adjustment'
+            : 'Minimal — privileged access detected';
+      document.getElementById('res-mult-desc').textContent = multDesc;
+
+      // Animate progress bars
+      setTimeout(() => {
+        document.getElementById('bar-raw').style.width = (rawScore / 10 * 100) + '%';
+        document.getElementById('bar-adj').style.width = (adjScore / 10 * 100) + '%';
+      }, 50);
+    });
+
+    /* ── Smooth scroll for nav CTA ─────────────────────────────────── */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+      });
+    });
+  </script>
+
+</body>
+
+</html>
