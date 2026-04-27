@@ -1,26 +1,69 @@
 export async function POST(req: Request) {
-  const data = await req.json();
+  try {
+    const data = await req.json();
 
-  const { score, schoolType, income } = data;
+    let { score, schoolType, income } = data;
 
-  let multiplier = 1;
+    // Convert score to number
+    const rawScore = Number(score);
 
-  if (schoolType === "government") multiplier += 0.2;
+    // Safety check
+    if (!rawScore) {
+      return Response.json({ error: "Invalid score" });
+    }
 
-  if (income === "<1L") multiplier += 0.4;
-  else if (income === "1-3L") multiplier += 0.3;
-  else if (income === "3-6L") multiplier += 0.2;
+    let multiplier = 1;
+    let factors: string[] = [];
 
-  const adjustedScore = parseFloat((score * multiplier).toFixed(2));
+    // 🎓 School factor
+    if (schoolType === "government") {
+      multiplier += 0.2;
+      factors.push("limited school resources");
+    }
 
-  let label = "Average";
-  if (adjustedScore > 9) label = "High Performer";
-  else if (adjustedScore > 7.5) label = "Hidden Star";
+    // 💰 Income factor
+    if (income === "<1L") {
+      multiplier += 0.4;
+      factors.push("low-income background");
+    } else if (income === "1-3L") {
+      multiplier += 0.3;
+      factors.push("financial constraints");
+    } else if (income === "3-6L") {
+      multiplier += 0.2;
+      factors.push("restricted opportunities");
+    }
 
-  return Response.json({
-    adjustedScore,
-    label,
-    explanation:
-      "This candidate shows strong potential despite socioeconomic constraints.",
-  });
+    // 🧮 Calculate adjusted score
+    const adjustedScore = parseFloat(
+      (rawScore * multiplier).toFixed(2)
+    );
+
+    // 🏷️ Label logic
+    let label = "Average";
+    if (adjustedScore > 9) {
+      label = "🚀 High Performer";
+    } else if (adjustedScore > 7.5) {
+      label = "⭐ Hidden Star";
+    }
+
+    // 🧠 AI-style explanation
+    const explanation =
+      factors.length > 0
+        ? `This candidate performed strongly despite ${factors.join(
+            ", "
+          )}. MeritLens identifies this as hidden potential.`
+        : "This candidate has strong academic performance.";
+
+    // 📤 Send response
+    return Response.json({
+      rawScore,
+      adjustedScore,
+      label,
+      factors,
+      explanation,
+    });
+
+  } catch (error) {
+    return Response.json({ error: "Something went wrong" });
+  }
 }

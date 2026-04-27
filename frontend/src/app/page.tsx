@@ -1,5 +1,6 @@
 'use client';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import Problem from '@/components/Problem';
@@ -10,6 +11,13 @@ import SDG from '@/components/SDG';
 import Footer from '@/components/Footer';
 
 export default function Home() {
+  const [compareMode, setCompareMode] = useState(false);
+
+  const [studentA, setStudentA] = useState({ score: "", schoolType: "", income: "" });
+  const [studentB, setStudentB] = useState({ score: "", schoolType: "", income: "" });
+
+  const [resultA, setResultA] = useState(null);
+  const [resultB, setResultB] = useState(null);
   useScrollReveal();
 
   return (
