@@ -11,6 +11,7 @@ import SDG from '@/components/SDG';
 import Footer from '@/components/Footer';
 
 export default function Home() {
+  // TODO: Improve candidate evaluation UI to better highlight context-aware scoring
   const [compareMode, setCompareMode] = useState(false);
 
   const [studentA, setStudentA] = useState({ score: "", schoolType: "", income: "" });
